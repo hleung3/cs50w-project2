@@ -18,6 +18,7 @@ function addChannelToList(socket, channel_name) {
   ul.appendChild(li);
   // create <a> element -> add class, href, channel name, text
   const a = document.createElement("a");
+  a.id = channel_name;
   a.classList.add("collection-item");
   a.classList.add("stretched-link");
   a.href = "#";
@@ -380,7 +381,6 @@ function toggle(str) {
 document.addEventListener("DOMContentLoaded", () => {
   // Define socketio
   var socket = io.connect(location.protocol + "//" + document.domain + ":" + location.port);
-  console.log(localStorage.getItem("all-users"));
   // On logout
   document.querySelector("#logout-link").onclick = () => {
     const username = localStorage.getItem("username");
@@ -391,12 +391,11 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("channel");
     socket.emit("user disconnected", {"username": username,
                                       "channel": channel});
-    console.log("wtf")
 
     socket.close();
   };
   socket.on("user logout", data => {
-    console.log("logg out message")
+    console.log("log out message")
     const username = data.username;
     const channel = data.channel;
     const timestamp = data.timestamp;
@@ -410,7 +409,10 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("connected");
     var username = localStorage.getItem("username");
     var channel_name = localStorage.getItem("channel");
-
+    console.log(username,channel_name);
+    if (channel_name != null) {
+      document.getElementById(channel_name).click();
+    }
     const li = document.createElement('li');
     li.innerHTML = "Hello, " + username;
     document.querySelector("#list-options").append(li);
@@ -474,14 +476,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   });
 
-  // socket.on("show all users", data => {
-  //   console.log("show all users")
-  //   // window.alert("looks good");
-  //   const li = document.querySelector("#show-all");
-  //   const users = data.message;
-  //   li.innerHTML = "all users: " + users;
-  //   // document.querySelector("#list-options").append(li);
-  // });
 
   // when server emits "announce channel" response;
   socket.on("announce channel", data => {
