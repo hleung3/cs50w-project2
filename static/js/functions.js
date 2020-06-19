@@ -1,8 +1,6 @@
-/*jshint esversion: 6 */
 
 // Redirect to login page if username is not in localStorage
 if (!localStorage.getItem("username")) {
-  // xx
   window.location.replace("/login/");
 };
 
@@ -63,8 +61,7 @@ function setOnChannelClick(socket, a) {
 
     // if there was a prior channel and not the same channel
     if (old_channel != null && old_channel != channel_name) {
-      // emit leave message to server application.py
-      // leaving prior channel
+      // emit leave prior channel message to server application.py
       socket.emit("leave", {
         "channel_name": old_channel,
         "username": username
@@ -77,6 +74,7 @@ function setOnChannelClick(socket, a) {
     });
     // set current channel in localstorage and get history/users
     localStorage.setItem("channel", channel_name);
+    console.log(localStorage.getItem("channel"),"set this channel");
     getMessages(channel_name);
     getUsers(channel_name);
 
@@ -92,7 +90,6 @@ function updateMessagesScroll(){
 
 function addMessage(timestamp, type, data) {
   //   ADD NEW MESSAGE TO CHANNEL
-  // "type" can only be "message", "system" or "file"
   var ul, li, div1, div2, span_ts, span_user, span_message, datetime;
   datetime = new Date(timestamp * 1000);
   datetime = datetime.toLocaleString().replace(",", "");
@@ -222,7 +219,6 @@ function setOnFileClick(a) {
 
 function getMessages(channel_name) {
   // Get channel messages
-
   removeMessages();
 
   // Check if loaded channel exists
@@ -246,9 +242,11 @@ function getMessages(channel_name) {
         data.forEach(message => {
           const owner = (message.username == localStorage.getItem("username"));
           if (message.message === undefined) {
-            addMessage(message.timestamp, "file", {"username": message.username, "filename": message.filename, "link": message.link, "owner": owner});
+            addMessage(message.timestamp, "file", {"username": message.username,
+            "filename": message.filename, "link": message.link, "owner": owner});
           } else {
-            addMessage(message.timestamp, "message", {"username": message.username, "message": message.message, "owner": owner});
+            addMessage(message.timestamp, "message",
+            {"username": message.username, "message": message.message, "owner": owner});
           }
         });
       }
@@ -258,6 +256,16 @@ function getMessages(channel_name) {
     data.append("channel_name", channel_name);
     request.send(data);
     return false;
+  }
+}
+
+function eventFire(el, etype) {
+  if (el.fireEvent) {
+    el.fireEvent('on' + etype);
+  } else {
+    var evObj = document.createEvent('Events');
+    evObj.initEvent(etype, true, false);
+    el.dispatchEvent(evObj);
   }
 }
 
@@ -272,9 +280,6 @@ function getChannels(socket) {
 
   request.onload = () => {
     if (request.status == 204) {
-      // showMessagesBlock(false);
-      // showNoChannelSelected(true);
-      // showNoChannelsList(true);
     } else if (request.status == 200) {
       // Got channels list
       const data = JSON.parse(request.responseText);
@@ -287,13 +292,11 @@ function getChannels(socket) {
       var channel_name = localStorage.getItem("channel");
       var link = document.querySelector(`[data-channel='${channel_name}']`);
       if (channel_name && link != null) {
-        // eventFire(link, "click");
+        console.log("eventfire");
+        eventFire(link, "click");
       }
-      // showNoChannelsList(false);
-      // sortChannelsList();
     };
   };
-
   request.send();
   return false;
 }
@@ -303,12 +306,11 @@ function getUsers(channel) {
   request.open("POST", "/get-users/");
   // makea a request to server getusers() - application.py
   request.onload = () => {
-    // refresh users list i think
+    // refresh users list
     removeUsers();
 
     if ((request.status == 404) || (request.status == 204)) {
       // Channel or user doesn't exist
-      // pass
     }
     else if (request.status == 200) {
       // Get users from python
@@ -329,8 +331,6 @@ function getUsers(channel) {
         ul.append(li);
       });
     }
-
-    // sortUsersList();
   };
   // return channel users data to application
   const data = new FormData();
@@ -410,9 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var username = localStorage.getItem("username");
     var channel_name = localStorage.getItem("channel");
     console.log(username,channel_name);
-    // if (channel_name != null) {
-    //   document.getElementById(channel_name).click();
-    // }
+
     const li = document.createElement('li');
     li.innerHTML = "Hello, " + username;
     document.querySelector("#list-options").append(li);
@@ -420,9 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.emit("user connected", {"username": username});
 
     getChannels(socket);
-    if (channel_name != null) {
-      document.getElementById(channel_name).click();
-    }
+
     document.querySelector("#new-channel-input").onsubmit = () => {
       console.log("make new channel")
       // get new name from input field
@@ -484,12 +480,8 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("announce channel");
     // get new channel name
     const channel_name = data.channel_name;
-    // remove no channel available text
-    // showNoChannelsList(false);
     // add channel to list
     addChannelToList(socket, channel_name);
-    // sort list of channels --> sorting probably not neccessary
-    // sortChannelsList();
   });
 
   // on user join
@@ -524,7 +516,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const username = data.username;
     const message = data.message;
     const timestamp = data.timestamp;
-    // console.log(username,message,timestamp);
     const owner = (username == localStorage.getItem("username"));
     addMessage(timestamp, "message", {"username": username, "message": message, "owner": owner});
   });
@@ -534,7 +525,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const timestamp = data.timestamp;
     const link = data.link;
     const filename = data.filename;
-    console.log("file sent?")
+    console.log("file sent")
     const owner = (username == localStorage.getItem("username"));
     addMessage(timestamp, "file", {"username": username, "filename": filename, "link": link, "owner": owner});
   });
