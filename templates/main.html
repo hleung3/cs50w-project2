@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block imports %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>
+  <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+{% endblock %}
+
+{% block heading %}
+    Main Page - Shlack
+{% endblock %}
+
+{% block body %}
+    <div class="">
+      <ul id="list-options">
+        <li>
+          <a id="logout-link" href="{{ url_for('logout') }}">Log out</a>
+        </li>
+        <li style="font-weight:bold">TODO</li>
+        <li style="font-weight:bold">user left message on logout</li>
+        <li style="font-weight:bold">update list of user on logout</li>
+        <li style="font-weight:bold">delete rooms you are admin of</li>
+        <li style="font-weight:bold">users should be able to delete their old messages</li>
+        <li style="font-weight:bold">rearrange functions in application.py to helpers.py??</li>
+        <li style="font-weight:bold">
+          need to format the chat room and channels to resize properly and not
+          affect each other at smaller sizes;;
+        </li>
+        <li style="font-weight:bold">ideally I would like a popout channel box</li><br>
+        <!-- <li id="show-all"></li> -->
+      </ul>
+    </div>
+    <div class="row container-fluid">
+      <div class="chat-col col-sm-auto col-lg-auto">
+          <div id="new-channel" class="border card h-100 mh-100">
+            <div class="card-header">
+              <h5>All Channels</h5>
+              <button type="button" name="button" onclick="toggle('card-body-div')">hide</button>
+              <form id="new-channel-input" method="post">
+                <div class="input-field">
+                  <input id="new-channel-name" name="new-channel" type="text" class="validate" placeholder="New channel">
+
+                </div>
+                <div class="input-field">
+                  <button class="btn btn-primary" type="submit">
+                    add
+                  </button>
+                </div>
+                <div id="no-channel-text" class="alert alert-primary" role="alert">
+                  no channel available
+                </div>
+              </form>
+            </div>
+            <div id="card-body-div" class="card-body h-50 mh-50">
+              <ul id="channels-list" class="list-group h-100" style="overflow-y:scroll">
+
+              </ul>
+            </div>
+          </div>
+      </div>
+      <div class="chat-col col-sm-auto col-lg-auto">
+        <div id="chat-room" class="card h-100 mh-100">
+          <div class="card-header">
+            <p> messages </p>
+          </div>
+          <div id="messages-block" class="card-body h-50 mh-50">
+            <ul id="messages-list" class="list-group mh-100" style="overflow-y:scroll">
+            </ul>
+          </div>
+          <div id="new-message-block" class="card-footer border">
+            <div>
+              <form id="new-message" method="post">
+                <div class="row">
+                  <div class="input-field col l8 m8 s8">
+                    <input id="new-message-text" name="new-message" type="text" class="validate" autocomplete="off">
+                    <!-- <label for="new-channel-name">New channel</label> -->
+                  </div>
+                  <div class="input-field col l2 m2 s2">
+                    <button class="btn btn-primary waves-effect waves-light" type="submit">Send
+                    </button>
+                  </div>
+                  <div class="input-field col l2 m2 s2">
+                    <input type="file" id="upload-file" name="file" style="display: none;">
+                    <button id="upload-file-button" class="btn btn-secondary waves-effect waves-light">File
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-col col-sm-auto col-lg-3">
+        <div id="users-list-space" class="card h-100 mh-100">
+          <div class="card-header" onclick="toggle('users-list-div')">
+            list of users
+          </div>
+          <div id="user-list-div" class="card-body border h-50 mh-50">
+            <ul id="users-list" class="list-group list-group-flush h-100" style="overflow-y:scroll">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

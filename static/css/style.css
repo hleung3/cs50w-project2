@@ -1,0 +1,12 @@
+.chat-col {
+  max-height:400px
+}
+#chat-room {
+  max-height:400px;
+}
+#new-channel {
+  max-height:400px;
+}
+#users-list-space {
+  max-height:400px;
+}

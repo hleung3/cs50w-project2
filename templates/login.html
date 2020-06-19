@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block imports %}
+<!-- <script></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}
+
+{% block heading %}
+    Login Page - Shlack
+{% endblock %}
+
+{% block body %}
+
+<form id="username" method="POST">
+    <div class="form-group">
+        <input id="user-input" name="username" type="text" class="validate" placeholder="Username">
+    <button class="btn btn-primary" type="submit">Log In</button>
+    </div>
+    <div id="error-message">
+    </div>
+</form>
+
+{% endblock %}
