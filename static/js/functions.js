@@ -410,9 +410,9 @@ document.addEventListener("DOMContentLoaded", () => {
     var username = localStorage.getItem("username");
     var channel_name = localStorage.getItem("channel");
     console.log(username,channel_name);
-    if (channel_name != null) {
-      document.getElementById(channel_name).click();
-    }
+    // if (channel_name != null) {
+    //   document.getElementById(channel_name).click();
+    // }
     const li = document.createElement('li');
     li.innerHTML = "Hello, " + username;
     document.querySelector("#list-options").append(li);
@@ -420,7 +420,9 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.emit("user connected", {"username": username});
 
     getChannels(socket);
-
+    if (channel_name != null) {
+      document.getElementById(channel_name).click();
+    }
     document.querySelector("#new-channel-input").onsubmit = () => {
       console.log("make new channel")
       // get new name from input field
