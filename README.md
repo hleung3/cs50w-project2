@@ -1,6 +1,6 @@
 ## HarvardX CS50W Project 2: Web Programming with Python and JavaScript
 
-###Try the app on Heroku:
+### Try the app on Heroku:
     [Click here](https://cs50w-p2-hleung3.herokuapp.com/)
 ### Overview
 
