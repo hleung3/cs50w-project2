@@ -75,11 +75,10 @@ def get_messages():
         return jsonify(messages[channel_name]["messages"])
 
 
-# @socketio.on("users exist")
 @app.route("/users-exist1/", methods=["POST"])
 def users_exist():
     # new_user = request.form.get("username")
-    print("get_all_users12221",list(users_online_global))
+    print("get_all_users",list(users_online_global))
     return jsonify(list(users_online_global))
 
 @app.route("/receive-file/", methods=["POST"])
@@ -177,8 +176,6 @@ def disconnected(data):
     users_online_global.discard(username)
     messages[channel]["users"].discard(username)
     timestamp = time.time()
-    # for channel_name in messages.keys():
-    #     messages[channel_name]["users"].discard(username)
     emit("user logout",{"username":username,"channel":channel,
                         "timestamp":timestamp},broadcast=True)
 
